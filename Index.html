@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Al Syed POS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Icons (Bootstrap Icons) -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+  />
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-soft: #e0edff;
+      --accent: #f97316;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --border: #e5e7eb;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .user-info {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      gap: 10px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 10px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-title i {
+      color: var(--primary);
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .stat {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .stat-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #ecfdf3;
+      color: var(--success);
+      align-self: flex-start;
+    }
+
+    .stat-tag.danger {
+      background: #fef2f2;
+      color: var(--danger);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn.secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn.danger {
+      background: var(--danger);
+    }
+
+    .btn.full {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn.icon-only {
+      border-radius: 999px;
+      padding: 6px;
+      width: 28px;
+      height: 28px;
+      justify-content: center;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      font-size: 12px;
+      outline: none;
+      background: #f9fafb;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      background: white;
+    }
+
+    textarea {
+      border-radius: 8px;
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-bottom: 6px;
+    }
+
+    .field label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    th,
+    td {
+      padding: 4px 6px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      font-weight: 600;
+      background: #f9fafb;
+    }
+
+    tbody tr:hover {
+      background: #f3f4f6;
+    }
+
+    .badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #4338ca;
+    }
+
+    .badge.pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge.paid {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge.low {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .flex {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .flex-between {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mt-4 {
+      margin-top: 8px;
+    }
+
+    .scroll-y {
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 11px;
+      cursor: pointer;
+      background: #f9fafb;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .chip {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      font-size: 10px;
+    }
+
+    .alert {
+      font-size: 11px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      background: #fef2f2;
+      color: #b91c1c;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .alert i {
+      margin-top: 2px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+      background: #111827;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.4);
+      z-index: 50;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: all 0.2s ease-out;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .badge-role {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #075985;
+    }
+
+    /* Login overlay */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .login-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.4);
+    }
+
+    .login-title {
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .login-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .login-roles {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .login-role {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .login-role.active {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .login-role span {
+      font-weight: 600;
+    }
+
+    .small {
+      font-size: 11px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 6px 0;
+    }
+
+    .tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <div class="brand">
+        <i class="bi bi-shop-window"></i>
+        <span>Al Syed</span> POS
+      </div>
+      <div class="user-info">
+        <div id="currentRoleLabel">Not logged in</div>
+        <div id="currentDateLabel"></div>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <!-- LEFT: Dashboard + Inventory + Expenses -->
+        <div class="left">
+          <!-- Dashboard -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="bi bi-speedometer2"></i>
+                Dashboard
+              </div>
+              <button class="btn secondary" id="btnResetDashboard">
+                <i class="bi bi-arrow-counterclockwise"></i>
+                Reset
+              </button>
+            </div>
+            <div class="grid-3">
+              <div class="stat">
+                <div class="stat-label">Today Sales</div>
+                <div class="stat-value" id="statTodaySales">0</div>
+                <div class="stat-tag">AED</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">This Month Sales</div>
+                <div class="stat-value" id="statMonthSales">0</div>
+                <div class="stat-tag">AED</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Profit</div>
+                <div class="stat-value" id="statProfit">0</div>
+                <div class="stat-tag">AED</div>
+              </div>
+            </div>
+            <div class="grid-3 mt-4">
+              <div class="stat">
+                <div class="stat-label">Total Invoices</div>
+                <div class="stat-value" id="statInvoices">0</div>
+                <div class="stat-tag">Count</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Top Item</div>
+                <div class="stat-value" id="statTopItem">-</div>
+                <div class="stat-tag">High sale</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Low Stock Items</div>
+                <div class="stat-value" id="statLowStock">0</div>
+                <div class="stat-tag danger">Check</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inventory & Products -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="bi bi-box-seam"></i>
+                Inventory & Products
+              </div>
+              <span class="pill">Fixed categories</span>
+            </div>
+
+            <div class="tabs">
+              <button class="tab active" data-tab="inventory">
+                <i class="bi bi-box"></i> Inventory
+              </button>
+              <button class="tab" data-tab="addProduct">
+                <i class="bi bi-plus-circle"></i> Add product
+              </button>
+              <button class="tab" data-tab="stockHistory">
+                <i class="bi bi-arrow-left-right"></i> Stock in/out
+              </button>
+            </div>
+
+            <div id="tabInventory" class="tab-panel">
+              <div class="grid-2">
+                <div class="field">
+                  <label>Search product / code</label>
+                  <input
+                    type="text"
+                    id="inventorySearch"
+                    placeholder="Name, code, barcode..."
+                  />
+                </div>
+                <div class="field">
+                  <label>Category</label>
+                  <select id="inventoryCategoryFilter">
+                    <option value="">All</option>
+                    <option value="Customatic">Customatic</option>
+                    <option value="Jewelry">Jewelry</option>
+                    <option value="Undergarments">Undergarments</option>
+                    <option value="Cloths">Cloths</option>
+                  </select>
+                </div>
+              </div>
+              <div class="scroll-y mt-4">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Code</th>
+                      <th>Name</th>
+                      <th>Cat</th>
+                      <th>Stock</th>
+                      <th>Cost</th>
+                      <th>Price</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="inventoryTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="tabAddProduct" class="tab-panel" style="display: none;">
+              <div class="grid-2">
+                <div class="field">
+                  <label>Product name</label>
+                  <input type="text" id="addProdName" />
+                </div>
+                <div class="field">
+                  <label>Code / Barcode</label>
+                  <input type="text" id="addProdCode" />
+                </div>
+              </div>
+              <div class="grid-2">
+                <div class="field">
+                  <label>Category</label>
+                  <select id="addProdCategory">
+                    <option value="Customatic">Customatic</option>
+                    <option value="Jewelry">Jewelry</option>
+                    <option value="Undergarments">Undergarments</option>
+                    <option value="Cloths">Cloths</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Low stock alert at</label>
+                  <input type="number" id="addProdLowStock" value="5" />
+                </div>
+              </div>
+              <div class="grid-2">
+                <div class="field">
+                  <label>Cost price</label>
+                  <input type="number" id="addProdCost" />
+                </div>
+                <div class="field">
+                  <label>Sale price</label>
+                  <input type="number" id="addProdPrice" />
+                </div>
+              </div>
+              <div class="field">
+                <label>Opening stock</label>
+                <input type="number" id="addProdStock" value="0" />
+              </div>
+              <button class="btn full mt-4" id="btnSaveProduct">
+                <i class="bi bi-check2-circle"></i>
+                Save product
+              </button>
+            </div>
+
+            <div id="tabStockHistory" class="tab-panel" style="display: none;">
+              <div class="scroll-y">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Code</th>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Qty</th>
+                      <th>By</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stockHistoryTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Expenses -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="bi bi-cash-coin"></i>
+                Shop expenses
+              </div>
+              <span class="pill">Daily / monthly</span>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label>Title</label>
+                <input type="text" id="expenseTitle" />
+              </div>
+              <div class="field">
+                <label>Amount</label>
+                <input type="number" id="expenseAmount" />
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label>Date</label>
+                <input type="date" id="expenseDate" />
+              </div>
+              <div class="field">
+                <label>Note</label>
+                <input type="text" id="expenseNote" />
+              </div>
+            </div>
+            <button class="btn full mt-4" id="btnAddExpense">
+              <i class="bi bi-plus-circle"></i>
+              Add expense
+            </button>
+            <div class="grid-2 mt-4">
+              <div class="stat">
+                <div class="stat-label">Today expenses</div>
+                <div class="stat-value" id="statTodayExpenses">0</div>
+                <div class="stat-tag danger">AED</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">This month expenses</div>
+                <div class="stat-value" id="statMonthExpenses">0</div>
+                <div class="stat-tag danger">AED</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Sales, Cart, Invoices -->
+        <div class="right">
+          <!-- Sale & Cart -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="bi bi-cart3"></i>
+                Sale & Cart
+              </div>
+              <span class="pill">Checkout + invoice</span>
+            </div>
+
+            <div class="field">
+              <label>Search product (name / code / number)</label>
+              <input
+                type="text"
+                id="saleSearch"
+                placeholder="Type to search..."
+              />
+            </div>
+
+            <div class="scroll-y mt-4" style="max-height: 120px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Stock</th>
+                    <th>Price</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="saleProductsTableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="flex-between">
+              <div class="card-title">
+                <i class="bi bi-bag-check"></i>
+                Cart
+              </div>
+              <div class="chip">
+                Items: <span id="cartItemsCount">0</span> |
+                Total: <span id="cartTotal">0</span>
+              </div>
+            </div>
+
+            <div class="scroll-y mt-4" style="max-height: 140px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="cartTableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="grid-2 mt-4">
+              <div class="field">
+                <label>Customer name (optional)</label>
+                <input type="text" id="saleCustomerName" />
+              </div>
+              <div class="field">
+                <label>Payment status</label>
+                <select id="salePaymentStatus">
+                  <option value="paid">Paid</option>
+                  <option value="pending">Pending</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2 mt-4">
+              <button class="btn secondary full" id="btnClearCart">
+                <i class="bi bi-x-circle"></i>
+                Clear cart
+              </button>
+              <button class="btn full" id="btnCheckout">
+                <i class="bi bi-receipt"></i>
+                Checkout & save sale
+              </button>
+            </div>
+          </div>
+
+          <!-- Invoices & Data -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="bi bi-receipt-cutoff"></i>
+                Invoices & Data
+              </div>
+              <div class="flex">
+                <button class="btn secondary small" id="btnExportData">
+                  <i class="bi bi-cloud-arrow-down"></i>
+                  Export
+                </button>
+                <label class="btn secondary small" for="importFileInput">
+                  <i class="bi bi-cloud-arrow-up"></i>
+                  Import
+                </label>
+                <input
+                  type="file"
+                  id="importFileInput"
+                  accept="application/json"
+                  style="display: none;"
+                />
+              </div>
+            </div>
+
+            <div class="tabs">
+              <button class="tab active" data-tab="invoices">
+                <i class="bi bi-list-ul"></i> Invoices
+              </button>
+              <button class="tab" data-tab="alerts">
+                <i class="bi bi-bell"></i> Alerts
+              </button>
+            </div>
+
+            <div id="tabInvoices" class="tab-panel">
+              <div class="scroll-y" style="max-height: 180px;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Date</th>
+                      <th>Customer</th>
+                      <th>Total</th>
+                      <th>Status</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="invoicesTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="tabAlerts" class="tab-panel" style="display: none;">
+              <div id="alertsContainer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Login overlay -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+      <div class="login-title">Sign in</div>
+      <div class="login-sub">
+        Choose role and enter PIN to access POS.
+      </div>
+
+      <div class="login-roles">
+        <div class="login-role active" data-role="admin">
+          <span>Admin</span>
+          <div class="small">Full access</div>
+          <div class="tag">PIN: 1234</div>
+        </div>
+        <div class="login-role" data-role="staff">
+          <span>Staff</span>
+          <div class="small">Sale + inventory</div>
+          <div class="tag">PIN: 0000</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>PIN</label>
+        <input type="password" id="loginPin" placeholder="Enter PIN" />
+      </div>
+
+      <button class="btn full mt-4" id="btnLogin">
+        <i class="bi bi-box-arrow-in-right"></i>
+        Login
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="bi bi-check2-circle"></i>
+    <span id="toastMessage">Saved</span>
+  </div>
+
+  <script>
+    // CONFIG
+    const OWNER_WHATSAPP = "923194141290"; // 03194141290 -> Pakistan format
+
+    // STATE
+    let state = {
+      role: null,
+      products: [],
+      stockHistory: [],
+      expenses: [],
+      invoices: [],
+      cart: [],
+    };
+
+    const STORAGE_KEY = "al_syed_pos_v1";
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state = Object.assign(state, parsed);
+        } else {
+          seedInitialData();
+        }
+      } catch (e) {
+        console.error(e);
+        seedInitialData();
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function seedInitialData() {
+      state.products = [
+        {
+          id: "P1",
+          name: "Customatic Set",
+          code: "CUST-001",
+          category: "Customatic",
+          stock: 10,
+          lowStockAt: 3,
+          cost: 20,
+          price: 35,
+        },
+        {
+          id: "P2",
+          name: "Gold Plated Ring",
+          code: "JEW-101",
+          category: "Jewelry",
+          stock: 5,
+          lowStockAt: 2,
+          cost: 30,
+          price: 55,
+        },
+        {
+          id: "P3",
+          name: "Ladies Undergarment",
+          code: "UND-050",
+          category: "Undergarments",
+          stock: 20,
+          lowStockAt: 5,
+          cost: 10,
+          price: 25,
+        },
+        {
+          id: "P4",
+          name: "Casual Shirt",
+          code: "CLT-210",
+          category: "Cloths",
+          stock: 15,
+          lowStockAt: 4,
+          cost: 18,
+          price: 40,
+        },
+      ];
+      state.stockHistory = [];
+      state.expenses = [];
+      state.invoices = [];
+      state.cart = [];
+      saveState();
+    }
+
+    // UTIL
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      const msgEl = document.getElementById("toastMessage");
+      msgEl.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    function formatDate(d) {
+      const dt = new Date(d);
+      return dt.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      });
+    }
+
+    function todayKey(d = new Date()) {
+      return d.toISOString().slice(0, 10);
+    }
+
+    function monthKey(d = new Date()) {
+      return d.toISOString().slice(0, 7);
+    }
+
+    function isToday(dateStr) {
+      return todayKey(new Date(dateStr)) === todayKey();
+    }
+
+    function isThisMonth(dateStr) {
+      return monthKey(new Date(dateStr)) === monthKey();
+    }
+
+    // RENDER
+    function renderHeader() {
+      const roleLabel = document.getElementById("currentRoleLabel");
+      const dateLabel = document.getElementById("currentDateLabel");
+      roleLabel.textContent = state.role
+        ? `Logged in as ${state.role.toUpperCase()}`
+        : "Not logged in";
+      dateLabel.textContent = new Date().toLocaleString();
+    }
+
+    function renderInventory() {
+      const tbody = document.getElementById("inventoryTableBody");
+      const search = document
+        .getElementById("inventorySearch")
+        .value.toLowerCase();
+      const cat = document.getElementById("inventoryCategoryFilter").value;
+
+      tbody.innerHTML = "";
+      state.products
+        .filter((p) => {
+          const matchSearch =
+            !search ||
+            p.name.toLowerCase().includes(search) ||
+            p.code.toLowerCase().includes(search);
+          const matchCat = !cat || p.category === cat;
+          return matchSearch && matchCat;
+        })
+        .forEach((p) => {
+          const tr = document.createElement("tr");
+          const low = p.stock <= p.lowStockAt;
+          tr.innerHTML = `
+            <td>${p.code}</td>
+            <td>${p.name}</td>
+            <td>${p.category}</td>
+            <td>
+              ${p.stock}
+              ${low ? '<span class="badge low">Low</span>' : ""}
+            </td>
+            <td>${p.cost}</td>
+            <td>${p.price}</td>
+            <td>
+              ${
+                state.role === "admin" || state.role === "staff"
+                  ? `<button class="btn icon-only secondary" data-action="stock-in" data-id="${p.id}">
+                      <i class="bi bi-plus"></i>
+                    </button>
+                    <button class="btn icon-only secondary" data-action="stock-out" data-id="${p.id}">
+                      <i class="bi bi-dash"></i>
+                    </button>`
+                  : ""
+              }
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+    }
+
+    function renderStockHistory() {
+      const tbody = document.getElementById("stockHistoryTableBody");
+      tbody.innerHTML = "";
+      state.stockHistory
+        .slice()
+        .reverse()
+        .forEach((h) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${formatDate(h.date)}</td>
+            <td>${h.code}</td>
+            <td>${h.name}</td>
+            <td>${h.type}</td>
+            <td>${h.qty}</td>
+            <td>${h.by}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+    }
+
+    function renderSaleProducts() {
+      const tbody = document.getElementById("saleProductsTableBody");
+      const search = document
+        .getElementById("saleSearch")
+        .value.toLowerCase();
+      tbody.innerHTML = "";
+      state.products
+        .filter((p) => {
+          if (!search) return true;
+          return (
+            p.name.toLowerCase().includes(search) ||
+            p.code.toLowerCase().includes(search)
+          );
+        })
+        .forEach((p) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${p.code}</td>
+            <td>${p.name}</td>
+            <td>${p.stock}</td>
+            <td>${p.price}</td>
+            <td>
+              ${
+                state.role
+                  ? `<button class="btn icon-only" data-action="add-to-cart" data-id="${p.id}">
+                      <i class="bi bi-cart-plus"></i>
+                    </button>`
+                  : ""
+              }
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+    }
+
+    function renderCart() {
+      const tbody = document.getElementById("cartTableBody");
+      tbody.innerHTML = "";
+      let total = 0;
+      let count = 0;
+      state.cart.forEach((item) => {
+        const lineTotal = item.qty * item.price;
+        total += lineTotal;
+        count += item.qty;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item.name}</td>
+          <td>
+            <div class="flex">
+              <button class="btn icon-only secondary" data-action="cart-dec" data-id="${item.id}">
+                <i class="bi bi-dash"></i>
+              </button>
+              ${item.qty}
+              <button class="btn icon-only secondary" data-action="cart-inc" data-id="${item.id}">
+                <i class="bi bi-plus"></i>
+              </button>
+            </div>
+          </td>
+          <td>${item.price}</td>
+          <td>${lineTotal}</td>
+          <td>
+            <button class="btn icon-only secondary" data-action="cart-remove" data-id="${item.id}">
+              <i class="bi bi-x"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      document.getElementById("cartItemsCount").textContent = count;
+      document.getElementById("cartTotal").textContent = total;
+    }
+
+    function renderInvoices() {
+      const tbody = document.getElementById("invoicesTableBody");
+      tbody.innerHTML = "";
+      state.invoices
+        .slice()
+        .reverse()
+        .forEach((inv, idx) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${state.invoices.length - idx}</td>
+            <td>${formatDate(inv.date)}</td>
+            <td>${inv.customer || "-"}</td>
+            <td>${inv.total}</td>
+            <td>
+              <span class="badge ${
+                inv.status === "paid" ? "paid" : "pending"
+              }">
+                ${inv.status}
+              </span>
+            </td>
+            <td>
+              <button class="btn icon-only secondary" data-action="view-invoice" data-id="${
+                inv.id
+              }">
+                <i class="bi bi-eye"></i>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+    }
+
+    function renderAlerts() {
+      const container = document.getElementById("alertsContainer");
+      container.innerHTML = "";
+
+      const lowStock = state.products.filter(
+        (p) => p.stock <= p.lowStockAt
+      );
+      if (lowStock.length) {
+        const div = document.createElement("div");
+        div.className = "alert";
+        div.innerHTML = `
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <div>
+            <strong>Low stock items:</strong><br/>
+            ${lowStock
+              .map((p) => `${p.name} (${p.stock})`)
+              .join(", ")}
+          </div>
+        `;
+        container.appendChild(div);
+      }
+
+      // High sale items (top 3 by qty)
+      const salesCount = {};
+      state.invoices.forEach((inv) => {
+        inv.items.forEach((it) => {
+          salesCount[it.id] = (salesCount[it.id] || 0) + it.qty;
+        });
+      });
+      const top = Object.entries(salesCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([id, qty]) => {
+          const p = state.products.find((x) => x.id === id);
+          return p ? `${p.name} (${qty})` : "";
+        })
+        .filter(Boolean);
+
+      if (top.length) {
+        const div = document.createElement("div");
+        div.className = "alert";
+        div.innerHTML = `
+          <i class="bi bi-graph-up-arrow"></i>
+          <div>
+            <strong>High sale items:</strong><br/>
+            ${top.join(", ")}
+          </div>
+        `;
+        container.appendChild(div);
+      }
+
+      if (!lowStock.length && !top.length) {
+        container.innerHTML =
+          '<div class="muted">No alerts right now.</div>';
+      }
+    }
+
+    function renderExpensesStats() {
+      const today = todayKey();
+      const month = monthKey();
+      let todayTotal = 0;
+      let monthTotal = 0;
+      state.expenses.forEach((e) => {
+        const dKey = todayKey(new Date(e.date));
+        const mKey = monthKey(new Date(e.date));
+        if (dKey === today) todayTotal += e.amount;
+        if (mKey === month) monthTotal += e.amount;
+      });
+      document.getElementById("statTodayExpenses").textContent =
+        todayTotal;
+      document.getElementById("statMonthExpenses").textContent =
+        monthTotal;
+    }
+
+    function renderDashboardStats() {
+      const today = todayKey();
+      const month = monthKey();
+      let todaySales = 0;
+      let monthSales = 0;
+      let profit = 0;
+      let invoicesCount = state.invoices.length;
+
+      const salesCount = {};
+      state.invoices.forEach((inv) => {
+        const dKey = todayKey(new Date(inv.date));
+        const mKey = monthKey(new Date(inv.date));
+        if (dKey === today) todaySales += inv.total;
+        if (mKey === month) monthSales += inv.total;
+
+        inv.items.forEach((it) => {
+          const product = state.products.find((p) => p.id === it.id);
+          if (product) {
+            const lineProfit =
+              (product.price - product.cost) * it.qty;
+            profit += lineProfit;
+            salesCount[it.id] = (salesCount[it.id] || 0) + it.qty;
+          }
+        });
+      });
+
+      let topItemName = "-";
+      let maxQty = 0;
+      Object.entries(salesCount).forEach(([id, qty]) => {
+        if (qty > maxQty) {
+          maxQty = qty;
+          const p = state.products.find((x) => x.id === id);
+          if (p) topItemName = p.name;
+        }
+      });
+
+      const lowStockCount = state.products.filter(
+        (p) => p.stock <= p.lowStockAt
+      ).length;
+
+      document.getElementById("statTodaySales").textContent =
+        todaySales;
+      document.getElementById("statMonthSales").textContent =
+        monthSales;
+      document.getElementById("statProfit").textContent = profit;
+      document.getElementById("statInvoices").textContent =
+        invoicesCount;
+      document.getElementById("statTopItem").textContent =
+        topItemName;
+      document.getElementById("statLowStock").textContent =
+        lowStockCount;
+    }
+
+    function renderAll() {
+      renderHeader();
+      renderInventory();
+      renderStockHistory();
+      renderSaleProducts();
+      renderCart();
+      renderInvoices();
+      renderAlerts();
+      renderExpensesStats();
+      renderDashboardStats();
+    }
+
+    // CART & SALE LOGIC
+    function addToCart(productId) {
+      const p = state.products.find((x) => x.id === productId);
+      if (!p || p.stock <= 0) {
+        showToast("No stock");
+        return;
+      }
+      const existing = state.cart.find((c) => c.id === p.id);
+      if (existing) {
+        if (existing.qty + 1 > p.stock) {
+          showToast("Not enough stock");
+          return;
+        }
+        existing.qty += 1;
+      } else {
+        state.cart.push({
+          id: p.id,
+          name: p.name,
+          price: p.price,
+          qty: 1,
+        });
+      }
+      renderCart();
+    }
+
+    function updateCartQty(productId, delta) {
+      const item = state.cart.find((c) => c.id === productId);
+      if (!item) return;
+      const product = state.products.find((p) => p.id === productId);
+      if (!product) return;
+      const newQty = item.qty + delta;
+      if (newQty <= 0) {
+        state.cart = state.cart.filter((c) => c.id !== productId);
+      } else {
+        if (newQty > product.stock) {
+          showToast("Not enough stock");
+          return;
+        }
+        item.qty = newQty;
+      }
+      renderCart();
+    }
+
+    function clearCart() {
+      state.cart = [];
+      renderCart();
+    }
+
+    function checkoutSale() {
+      if (!state.role) {
+        showToast("Login required");
+        return;
+      }
+      if (!state.cart.length) {
+        showToast("Cart is empty");
+        return;
+      }
+      const customer =
+        document.getElementById("saleCustomerName").value.trim();
+      const status =
+        document.getElementById("salePaymentStatus").value;
+      let total = 0;
+      state.cart.forEach((it) => {
+        total += it.qty * it.price;
+      });
+
+      // Reduce stock
+      state.cart.forEach((it) => {
+        const p = state.products.find((x) => x.id === it.id);
+        if (p) {
+          p.stock -= it.qty;
+          state.stockHistory.push({
+            date: new Date().toISOString(),
+            code: p.code,
+            name: p.name,
+            type: "SALE",
+            qty: it.qty,
+            by: state.role,
+          });
+        }
+      });
+
+      const invoice = {
+        id: "INV-" + Date.now(),
+        date: new Date().toISOString(),
+        customer,
+        status,
+        total,
+        items: state.cart.map((it) => ({ ...it })),
+      };
+      state.invoices.push(invoice);
+      saveState();
+      clearCart();
+      renderAll();
+      showToast("Sale saved");
+
+      // WhatsApp notification
+      sendWhatsAppNotification(invoice);
+    }
+
+    function sendWhatsAppNotification(invoice) {
+      const lines = [];
+      lines.push("New sale from Al Syed POS");
+      lines.push("Invoice: " + invoice.id);
+      lines.push("Date: " + formatDate(invoice.date));
+      if (invoice.customer) {
+        lines.push("Customer: " + invoice.customer);
+      }
+      lines.push("Status: " + invoice.status.toUpperCase());
+      lines.push("Total: " + invoice.total + " AED");
+      lines.push("Items:");
+      invoice.items.forEach((it) => {
+        lines.push("- " + it.name + " x" + it.qty + " = " + it.qty * it.price);
+      });
+
+      const text = encodeURIComponent(lines.join("\n"));
+      const url = `https://wa.me/${OWNER_WHATSAPP}?text=${text}`;
+      window.open(url, "_blank");
+    }
+
+    // EXPENSES
+    function addExpense() {
+      const title =
+        document.getElementById("expenseTitle").value.trim();
+      const amount = parseFloat(
+        document.getElementById("expenseAmount").value
+      );
+      const date =
+        document.getElementById("expenseDate").value ||
+        new Date().toISOString().slice(0, 10);
+      const note =
+        document.getElementById("expenseNote").value.trim();
+
+      if (!title || !amount) {
+        showToast("Title & amount required");
+        return;
+      }
+
+      state.expenses.push({
+        id: "EXP-" + Date.now(),
+        title,
+        amount,
+        date,
+        note,
+      });
+      saveState();
+      document.getElementById("expenseTitle").value = "";
+      document.getElementById("expenseAmount").value = "";
+      document.getElementById("expenseNote").value = "";
+      renderExpensesStats();
+      showToast("Expense added");
+    }
+
+    // DASHBOARD RESET
+    function resetDashboard() {
+      if (!state.role || state.role !== "admin") {
+        showToast("Admin only");
+        return;
+      }
+      if (
+        !confirm(
+          "Reset sales, invoices, stock history & expenses? Products & categories will stay."
+        )
+      )
+        return;
+
+      state.invoices = [];
+      state.stockHistory = [];
+      state.expenses = [];
+      saveState();
+      renderAll();
+      showToast("Dashboard reset");
+    }
+
+    // DATA EXPORT / IMPORT
+    function exportData() {
+      const dataStr =
+        "data:text/json;charset=utf-8," +
+        encodeURIComponent(JSON.stringify(state));
+      const a = document.createElement("a");
+      a.href = dataStr;
+      a.download = "al_syed_pos_backup.json";
+      a.click();
+    }
+
+    function importData(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          state = Object.assign(state, imported);
+          saveState();
+          renderAll();
+          showToast("Data imported");
+        } catch (err) {
+          alert("Invalid file");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // LOGIN
+    function handleLogin() {
+      const pin = document.getElementById("loginPin").value.trim();
+      const activeRoleEl = document.querySelector(
+        ".login-role.active"
+      );
+      const role = activeRoleEl.dataset.role;
+      if (role === "admin" && pin === "1234") {
+        state.role = "admin";
+      } else if (role === "staff" && pin === "0000") {
+        state.role = "staff";
+      } else {
+        alert("Wrong PIN");
+        return;
+      }
+      document.getElementById("loginOverlay").style.display = "none";
+      renderAll();
+      showToast("Logged in as " + state.role);
+    }
+
+    // EVENTS
+    function setupEvents() {
+      document
+        .getElementById("inventorySearch")
+        .addEventListener("input", renderInventory);
+      document
+        .getElementById("inventoryCategoryFilter")
+        .addEventListener("change", renderInventory);
+      document
+        .getElementById("saleSearch")
+        .addEventListener("input", renderSaleProducts);
+
+      document
+        .getElementById("btnSaveProduct")
+        .addEventListener("click", () => {
+          if (!state.role) {
+            showToast("Login required");
+            return;
+          }
+          const name =
+            document.getElementById("addProdName").value.trim();
+          const code =
+            document.getElementById("addProdCode").value.trim();
+          const category =
+            document.getElementById("addProdCategory").value;
+          const lowStockAt = parseInt(
+            document.getElementById("addProdLowStock").value || "0"
+          );
+          const cost = parseFloat(
+            document.getElementById("addProdCost").value || "0"
+          );
+          const price = parseFloat(
+            document.getElementById("addProdPrice").value || "0"
+          );
+          const stock = parseInt(
+            document.getElementById("addProdStock").value || "0"
+          );
+
+          if (!name || !code) {
+            showToast("Name & code required");
+            return;
+          }
+
+          const existing = state.products.find(
+            (p) => p.code.toLowerCase() === code.toLowerCase()
+          );
+          if (existing) {
+            showToast("Code already exists");
+            return;
+          }
+
+          const id = "P" + Date.now();
+          state.products.push({
+            id,
+            name,
+            code,
+            category,
+            stock,
+            lowStockAt,
+            cost,
+            price,
+          });
+          if (stock > 0) {
+            state.stockHistory.push({
+              date: new Date().toISOString(),
+              code,
+              name,
+              type: "IN",
+              qty: stock,
+              by: state.role,
+            });
+          }
+          saveState();
+          document.getElementById("addProdName").value = "";
+          document.getElementById("addProdCode").value = "";
+          document.getElementById("addProdCost").value = "";
+          document.getElementById("addProdPrice").value = "";
+          document.getElementById("addProdStock").value = "0";
+          renderInventory();
+          renderStockHistory();
+          renderSaleProducts();
+          showToast("Product saved");
+        });
+
+      document
+        .getElementById("inventoryTableBody")
+        .addEventListener("click", (e) => {
+          const btn = e.target.closest("button");
+          if (!btn) return;
+          const id = btn.dataset.id;
+          const action = btn.dataset.action;
+          const product = state.products.find((p) => p.id === id);
+          if (!product) return;
+          if (!state.role) {
+            showToast("Login required");
+            return;
+          }
+          if (action === "stock-in") {
+            const qty = parseInt(
+              prompt("Stock IN quantity:", "1") || "0"
+            );
+            if (!qty) return;
+            product.stock += qty;
+            state.stockHistory.push({
+              date: new Date().toISOString(),
+              code: product.code,
+              name: product.name,
+              type: "IN",
+              qty,
+              by: state.role,
+            });
+          } else if (action === "stock-out") {
+            const qty = parseInt(
+              prompt("Stock OUT quantity:", "1") || "0"
+            );
+            if (!qty) return;
+            if (qty > product.stock) {
+              alert("Not enough stock");
+              return;
+            }
+            product.stock -= qty;
+            state.stockHistory.push({
+              date: new Date().toISOString(),
+              code: product.code,
+              name: product.name,
+              type: "OUT",
+              qty,
+              by: state.role,
+            });
+          }
+          saveState();
+          renderInventory();
+          renderStockHistory();
+        });
+
+      document
+        .getElementById("saleProductsTableBody")
+        .addEventListener("click", (e) => {
+          const btn = e.target.closest("button");
+          if (!btn) return;
+          const id = btn.dataset.id;
+          const action = btn.dataset.action;
+          if (action === "add-to-cart") {
+            addToCart(id);
+          }
+        });
+
+      document
+        .getElementById("cartTableBody")
+        .addEventListener("click", (e) => {
+          const btn = e.target.closest("button");
+          if (!btn) return;
+          const id = btn.dataset.id;
+          const action = btn.dataset.action;
+          if (action === "cart-inc") updateCartQty(id, 1);
+          if (action === "cart-dec") updateCartQty(id, -1);
+          if (action === "cart-remove") {
+            state.cart = state.cart.filter((c) => c.id !== id);
+            renderCart();
+          }
+        });
+
+      document
+        .getElementById("btnClearCart")
+        .addEventListener("click", clearCart);
+      document
+        .getElementById("btnCheckout")
+        .addEventListener("click", checkoutSale);
+
+      document
+        .getElementById("btnAddExpense")
+        .addEventListener("click", addExpense);
+
+      document
+        .getElementById("btnResetDashboard")
+        .addEventListener("click", resetDashboard);
+
+      document
+        .getElementById("btnExportData")
+        .addEventListener("click", exportData);
+      document
+        .getElementById("importFileInput")
+        .addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (file) importData(file);
+        });
+
+      document
+        .getElementById("invoicesTableBody")
+        .addEventListener("click", (e) => {
+          const btn = e.target.closest("button");
+          if (!btn) return;
+          const id = btn.dataset.id;
+          const action = btn.dataset.action;
+          if (action === "view-invoice") {
+            const inv = state.invoices.find((x) => x.id === id);
+            if (!inv) return;
+            let msg = `Invoice: ${inv.id}\nDate: ${formatDate(
+              inv.date
+            )}\nStatus: ${inv.status.toUpperCase()}\nTotal: ${
+              inv.total
+            } AED\n\nItems:\n`;
+            inv.items.forEach((it) => {
+              msg += `- ${it.name} x${it.qty} = ${
+                it.qty * it.price
+              }\n`;
+            });
+            alert(msg);
+          }
+        });
+
+      // Tabs
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const parentCard = tab.closest(".card");
+          const tabName = tab.dataset.tab;
+          parentCard
+            .querySelectorAll(".tab")
+            .forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+          parentCard
+            .querySelectorAll(".tab-panel")
+            .forEach((panel) => (panel.style.display = "none"));
+          const panelId =
+            tabName === "inventory" ||
+            tabName === "addProduct" ||
+            tabName === "stockHistory"
+              ? "tab" +
+                tabName.charAt(0).toUpperCase() +
+                tabName.slice(1)
+              : "tab" +
+                tabName.charAt(0).toUpperCase() +
+                tabName.slice(1);
+          const panel = parentCard.querySelector("#" + panelId);
+          if (panel) panel.style.display = "block";
+        });
+      });
+
+      // Login role selection
+      document
+        .querySelectorAll(".login-role")
+        .forEach((roleEl) => {
+          roleEl.addEventListener("click", () => {
+            document
+              .querySelectorAll(".login-role")
+              .forEach((r) => r.classList.remove("active"));
+            roleEl.classList.add("active");
+          });
+        });
+
+      document
+        .getElementById("btnLogin")
+        .addEventListener("click", handleLogin);
+
+      document
+        .getElementById("loginPin")
+        .addEventListener("keydown", (e) => {
+          if (e.key === "Enter") handleLogin();
+        });
+    }
+
+    // INIT
+    loadState();
+    setupEvents();
+    renderAll();
+  </script>
+</body>
+</html>
